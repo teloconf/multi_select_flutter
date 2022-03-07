@@ -104,6 +104,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
 class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
   List<V> _selectedValues = [];
   bool _showSearch = false;
+  bool _selectAll = false;
   List<MultiSelectItem<V>> _items;
 
   _MultiSelectDialogState(this._items);
@@ -255,19 +256,46 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
       content: Container(
         height: widget.height,
         width: MediaQuery.of(context).size.width * 0.72,
-        child: widget.listType == null ||
-                widget.listType == MultiSelectListType.LIST
-            ? ListView.builder(
-                itemCount: _items.length,
-                itemBuilder: (context, index) {
-                  return _buildListItem(_items[index]);
-                },
-              )
-            : SingleChildScrollView(
-                child: Wrap(
-                  children: _items.map(_buildChipItem).toList(),
+        child: Column(
+          children: [
+            widget.listType == null ||
+                    widget.listType == MultiSelectListType.LIST
+                ? ListView.builder(
+                    itemCount: _items.length,
+                    itemBuilder: (context, index) {
+                      return _buildListItem(_items[index]);
+                    },
+                  )
+                : SingleChildScrollView(
+                    child: Wrap(
+                      children: _items.map(_buildChipItem).toList(),
+                    ),
+                  ),
+            Expanded(
+              child: Container(
+                alignment: Alignment.bottomCenter,
+                child: Row(
+                  children: [
+                    Expanded(child: Text("Seleccionar todos")),
+                    Checkbox(
+                        value: _selectAll,
+                        onChanged: (newValue) {
+                          setState(() {
+                            _selectAll = newValue!;
+                            if (_selectAll) {
+                              _selectedValues =
+                                  widget.items.map((e) => e.value).toList();
+                            } else {
+                              _selectedValues = [];
+                            }
+                          });
+                        })
+                  ],
                 ),
               ),
+            ),
+          ],
+        ),
       ),
       actions: <Widget>[
         TextButton(

@@ -41,6 +41,13 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
 
   /// Toggles search functionality.
   final bool? searchable;
+  
+  /// Toggles select all functionality.
+  final bool? allowSelectAll;
+
+  /// Text on the select all checkbox.
+  final Text? selectAllText;
+
 
   /// Text on the confirm button.
   final Text? confirmText;
@@ -108,8 +115,10 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.onSelectionChanged,
     this.chipDisplay,
     this.searchable,
+    this.allowSelectAll, 
     this.confirmText,
     this.cancelText,
+    this.selectAllText, 
     this.barrierColor,
     this.selectedColor,
     this.searchHint,
@@ -149,8 +158,10 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 onSelectionChanged: onSelectionChanged,
                 initialValue: initialValue,
                 searchable: searchable,
+                allowSelectAll: allowSelectAll, 
                 confirmText: confirmText,
                 cancelText: cancelText,
+                selectAllText: selectAllText,
                 barrierColor: barrierColor,
                 selectedColor: selectedColor,
                 searchHint: searchHint,
@@ -183,8 +194,10 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
   final List<V>? initialValue;
   final void Function(List<V>)? onConfirm;
   final bool? searchable;
+  final bool? allowSelectAll;
   final Text? confirmText;
   final Text? cancelText;
+  final Text? selectAllText;
   final Color? barrierColor;
   final Color? selectedColor;
   final double? height;
@@ -213,8 +226,10 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
     this.chipDisplay,
     this.initialValue,
     this.searchable,
+    this.allowSelectAll, 
     this.confirmText,
     this.cancelText,
+    this.selectAllText, 
     this.barrierColor,
     this.selectedColor,
     this.searchHint,
@@ -245,8 +260,10 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
         chipDisplay = field.chipDisplay,
         initialValue = field.initialValue,
         searchable = field.searchable,
+        allowSelectAll = field.allowSelectAll, 
         confirmText = field.confirmText,
         cancelText = field.cancelText,
+        selectAllText = field.selectAllText, 
         barrierColor = field.barrierColor,
         selectedColor = field.selectedColor,
         height = field.height,
