@@ -379,6 +379,7 @@ class __MultiSelectDialogFieldViewState<V>
           title: widget.title != null ? widget.title : Text("Select"),
           initialValue: _selectedItems,
           searchable: widget.searchable ?? false,
+          allowSelectAll: widget.allowSelectAll ?? false, 
           confirmText: widget.confirmText,
           cancelText: widget.cancelText,
           onConfirm: (selected) {

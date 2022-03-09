@@ -23,6 +23,9 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
   /// Toggles search functionality.
   final bool? searchable;
 
+  /// Toggles select all functionality.
+  final bool? allowSelectAll;
+  
   /// Text on the confirm button.
   final Text? confirmText;
 
@@ -80,6 +83,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
     this.onConfirm,
     this.listType,
     this.searchable,
+    this.allowSelectAll, 
     this.confirmText,
     this.cancelText,
     this.selectedColor,
@@ -271,6 +275,7 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
                       children: _items.map(_buildChipItem).toList(),
                     ),
                   ),
+            if (widget.allowSelectAll??false)
             Expanded(
               child: Container(
                 alignment: Alignment.bottomCenter,
