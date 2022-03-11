@@ -6,9 +6,58 @@ import '../chip_display/multi_select_chip_display.dart';
 import 'mult_select_dialog.dart';
 import 'dart:async';
 
+
+class MultiSelectDialogTheme {
+
+/// Set the color of the space outside the BottomSheet.
+  final Color? barrierColor;
+
+  /// Sets the color of the checkbox or chip when it's selected.
+  final Color? selectedColor;
+
+  /// Give the dialog a fixed height
+  final double? height;
+
+  /// Set the background color of the dialog.
+  final Color? backgroundColor;
+
+  /// Color of the chip body or checkbox border while not selected.
+  final Color? unselectedColor;
+
+  /// Style the text on the chips or list tiles.
+  final TextStyle? itemsTextStyle;
+
+  /// Style the text on the selected chips or list tiles.
+  final TextStyle? selectedItemsTextStyle;
+
+  /// Style the text that is typed into the search field.
+  final TextStyle? searchTextStyle;
+
+  /// Style the search hint.
+  final TextStyle? searchHintStyle;
+
+  /// Set the color of the check in the checkbox
+  final Color? checkColor;
+
+  MultiSelectDialogTheme( {
+        this.barrierColor,
+    this.selectedColor,
+    this.height,
+    this.backgroundColor,
+    this.unselectedColor,
+    this.itemsTextStyle,
+    this.searchTextStyle,
+    this.searchHintStyle,
+    this.selectedItemsTextStyle,
+    this.checkColor,
+  });
+
+}
+
 /// A customizable InkWell widget that opens the MultiSelectDialog
 // ignore: must_be_immutable
 class MultiSelectDialogField<V> extends FormField<List<V>> {
+  
   /// An enum that determines which type of list to render.
   final MultiSelectListType? listType;
 
@@ -56,27 +105,12 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   /// Text on the cancel button.
   final Text? cancelText;
 
-  /// Set the color of the space outside the BottomSheet.
-  final Color? barrierColor;
-
-  /// Sets the color of the checkbox or chip when it's selected.
-  final Color? selectedColor;
-
-  /// Give the dialog a fixed height
-  final double? height;
-
-  /// Set the placeholder text of the search field.
-  final String? searchHint;
-
   /// A function that sets the color of selected items based on their value.
   /// It will either set the chip color, or the checkbox color depending on the list type.
   final Color Function(V)? colorator;
 
-  /// Set the background color of the dialog.
-  final Color? backgroundColor;
-
-  /// Color of the chip body or checkbox border while not selected.
-  final Color? unselectedColor;
+  /// Set the placeholder text of the search field.
+  final String? searchHint;
 
   /// Replaces the deafult search icon when searchable is true.
   final Icon? searchIcon;
@@ -84,26 +118,13 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   /// Replaces the default close search icon when searchable is true.
   final Icon? closeSearchIcon;
 
-  /// Style the text on the chips or list tiles.
-  final TextStyle? itemsTextStyle;
-
-  /// Style the text on the selected chips or list tiles.
-  final TextStyle? selectedItemsTextStyle;
-
-  /// Style the text that is typed into the search field.
-  final TextStyle? searchTextStyle;
-
-  /// Style the search hint.
-  final TextStyle? searchHintStyle;
-
-  /// Set the color of the check in the checkbox
-  final Color? checkColor;
-
   final AutovalidateMode autovalidateMode;
   final FormFieldValidator<List<V>>? validator;
   final FormFieldSetter<List<V>>? onSaved;
   final GlobalKey<FormFieldState>? key;
   FormFieldState<List<V>>? state;
+
+  MultiSelectDialogTheme? theme;
 
   MultiSelectDialogField({
     required this.items,
@@ -120,26 +141,17 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.confirmText,
     this.cancelText,
     this.selectAllText,
-    this.barrierColor,
-    this.selectedColor,
     this.searchHint,
-    this.height,
     this.colorator,
-    this.backgroundColor,
-    this.unselectedColor,
     this.searchIcon,
     this.closeSearchIcon,
-    this.itemsTextStyle,
-    this.searchTextStyle,
-    this.searchHintStyle,
-    this.selectedItemsTextStyle,
-    this.checkColor,
     this.onSaved,
     this.validator,
     this.initialValue,
     this.values, 
     this.autovalidateMode = AutovalidateMode.disabled,
     this.key,
+    this.theme, 
   }) : super(
             key: key,
             onSaved: onSaved,
@@ -165,20 +177,20 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 confirmText: confirmText,
                 cancelText: cancelText,
                 selectAllText: selectAllText,
-                barrierColor: barrierColor,
-                selectedColor: selectedColor,
+                barrierColor: theme?.barrierColor,
+                selectedColor: theme?.selectedColor,
                 searchHint: searchHint,
-                height: height,
+                height: theme?.height,
                 colorator: colorator,
-                backgroundColor: backgroundColor,
-                unselectedColor: unselectedColor,
+                backgroundColor: theme?.backgroundColor,
+                unselectedColor: theme?.unselectedColor,
                 searchIcon: searchIcon,
                 closeSearchIcon: closeSearchIcon,
-                itemsTextStyle: itemsTextStyle,
-                searchTextStyle: searchTextStyle,
-                searchHintStyle: searchHintStyle,
-                selectedItemsTextStyle: selectedItemsTextStyle,
-                checkColor: checkColor,
+                itemsTextStyle: theme?.itemsTextStyle,
+                searchTextStyle: theme?.searchTextStyle,
+                searchHintStyle: theme?.searchHintStyle,
+                selectedItemsTextStyle: theme?.selectedItemsTextStyle,
+                checkColor: theme?.checkColor,
               );
               return _MultiSelectDialogFieldView<V?>._withState(
                   field as _MultiSelectDialogFieldView<V?>, state);
