@@ -4,6 +4,7 @@ import '../util/multi_select_list_type.dart';
 import '../util/multi_select_item.dart';
 import '../chip_display/multi_select_chip_display.dart';
 import 'mult_select_dialog.dart';
+import 'dart:async';
 
 /// A customizable InkWell widget that opens the MultiSelectDialog
 // ignore: must_be_immutable
@@ -35,19 +36,19 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
 
   /// The list of selected values before interaction.
   final List<V>? initialValue;
+  final Stream<List<V>>? values;
 
   /// Fires when confirm is tapped.
   final void Function(List<V>) onConfirm;
 
   /// Toggles search functionality.
   final bool? searchable;
-  
+
   /// Toggles select all functionality.
   final bool? allowSelectAll;
 
   /// Text on the select all checkbox.
   final Text? selectAllText;
-
 
   /// Text on the confirm button.
   final Text? confirmText;
@@ -115,10 +116,10 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.onSelectionChanged,
     this.chipDisplay,
     this.searchable,
-    this.allowSelectAll, 
+    this.allowSelectAll,
     this.confirmText,
     this.cancelText,
-    this.selectAllText, 
+    this.selectAllText,
     this.barrierColor,
     this.selectedColor,
     this.searchHint,
@@ -136,6 +137,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.onSaved,
     this.validator,
     this.initialValue,
+    this.values, 
     this.autovalidateMode = AutovalidateMode.disabled,
     this.key,
   }) : super(
@@ -157,8 +159,9 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 onConfirm: onConfirm,
                 onSelectionChanged: onSelectionChanged,
                 initialValue: initialValue,
+                values: values, 
                 searchable: searchable,
-                allowSelectAll: allowSelectAll, 
+                allowSelectAll: allowSelectAll,
                 confirmText: confirmText,
                 cancelText: cancelText,
                 selectAllText: selectAllText,
@@ -177,7 +180,8 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 selectedItemsTextStyle: selectedItemsTextStyle,
                 checkColor: checkColor,
               );
-              return _MultiSelectDialogFieldView<V?>._withState(field as _MultiSelectDialogFieldView<V?>, state);
+              return _MultiSelectDialogFieldView<V?>._withState(
+                  field as _MultiSelectDialogFieldView<V?>, state);
             });
 }
 
@@ -192,6 +196,7 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
   final void Function(List<V>)? onSelectionChanged;
   final MultiSelectChipDisplay<V>? chipDisplay;
   final List<V>? initialValue;
+  final Stream<List<V>>? values;
   final void Function(List<V>)? onConfirm;
   final bool? searchable;
   final bool? allowSelectAll;
@@ -226,10 +231,10 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
     this.chipDisplay,
     this.initialValue,
     this.searchable,
-    this.allowSelectAll, 
+    this.allowSelectAll,
     this.confirmText,
     this.cancelText,
-    this.selectAllText, 
+    this.selectAllText,
     this.barrierColor,
     this.selectedColor,
     this.searchHint,
@@ -244,6 +249,7 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
     this.searchHintStyle,
     this.selectedItemsTextStyle,
     this.checkColor,
+    this.values, 
   });
 
   /// This constructor allows a FormFieldState to be passed in. Called by MultiSelectDialogField.
@@ -259,11 +265,12 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
         onConfirm = field.onConfirm,
         chipDisplay = field.chipDisplay,
         initialValue = field.initialValue,
+        values = field.values,
         searchable = field.searchable,
-        allowSelectAll = field.allowSelectAll, 
+        allowSelectAll = field.allowSelectAll,
         confirmText = field.confirmText,
         cancelText = field.cancelText,
-        selectAllText = field.selectAllText, 
+        selectAllText = field.selectAllText,
         barrierColor = field.barrierColor,
         selectedColor = field.selectedColor,
         height = field.height,
@@ -288,19 +295,36 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
 class __MultiSelectDialogFieldViewState<V>
     extends State<_MultiSelectDialogFieldView<V>> {
   List<V> _selectedItems = [];
-
+  StreamSubscription? _itemsSubscription;
+  
+  @override
   void initState() {
     super.initState();
     if (widget.initialValue != null) {
       _selectedItems.addAll(widget.initialValue!);
     }
+    else if (widget.values != null) {
+      _itemsSubscription = widget.values!.listen((items) {
+        setState(() {
+          _selectedItems = items;
+        });
+      });
+    }
+  }
+
+  @override
+  dispose() {
+    if (_itemsSubscription != null) {
+      _itemsSubscription!.cancel();
+    }
+    super.dispose();
   }
 
   Widget _buildInheritedChipDisplay() {
     List<MultiSelectItem<V>?> chipDisplayItems = [];
     chipDisplayItems = _selectedItems
-        .map((e) => widget.items
-            .firstWhereOrNull((element) => e == element.value))
+        .map((V e) =>
+            widget.items.firstWhereOrNull((element) => e == element.value))
         .toList();
     chipDisplayItems.removeWhere((element) => element == null);
     if (widget.chipDisplay != null) {
@@ -379,7 +403,7 @@ class __MultiSelectDialogFieldViewState<V>
           title: widget.title != null ? widget.title : Text("Select"),
           initialValue: _selectedItems,
           searchable: widget.searchable ?? false,
-          allowSelectAll: widget.allowSelectAll ?? false, 
+          allowSelectAll: widget.allowSelectAll ?? false,
           confirmText: widget.confirmText,
           cancelText: widget.cancelText,
           onConfirm: (selected) {
