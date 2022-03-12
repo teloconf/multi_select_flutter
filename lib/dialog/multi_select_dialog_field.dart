@@ -9,7 +9,10 @@ import 'dart:async';
 
 class MultiSelectDialogTheme {
 
-/// Set the color of the space outside the BottomSheet.
+  /// Style the Container that makes up the field.
+  final BoxDecoration? decoration;
+
+  /// Set the color of the space outside the BottomSheet.
   final Color? barrierColor;
 
   /// Sets the color of the checkbox or chip when it's selected.
@@ -40,7 +43,8 @@ class MultiSelectDialogTheme {
   final Color? checkColor;
 
   MultiSelectDialogTheme( {
-        this.barrierColor,
+    this.decoration,
+    this.barrierColor,
     this.selectedColor,
     this.height,
     this.backgroundColor,
@@ -60,9 +64,6 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   
   /// An enum that determines which type of list to render.
   final MultiSelectListType? listType;
-
-  /// Style the Container that makes up the field.
-  final BoxDecoration? decoration;
 
   /// Set text that is displayed on the button.
   final Text? buttonText;
@@ -133,7 +134,6 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.buttonText,
     this.buttonIcon,
     this.listType,
-    this.decoration,
     this.onSelectionChanged,
     this.chipDisplay,
     this.searchable,
@@ -166,7 +166,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 buttonText: buttonText,
                 buttonIcon: buttonIcon,
                 chipDisplay: chipDisplay,
-                decoration: decoration,
+                decoration: theme?.decoration,
                 listType: listType,
                 onConfirm: onConfirm,
                 onSelectionChanged: onSelectionChanged,
