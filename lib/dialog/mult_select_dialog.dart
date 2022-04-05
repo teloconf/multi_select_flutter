@@ -25,7 +25,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
 
   /// Toggles select all functionality.
   final bool? allowSelectAll;
-  
+
   /// Text on the confirm button.
   final Text? confirmText;
 
@@ -83,7 +83,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
     this.onConfirm,
     this.listType,
     this.searchable,
-    this.allowSelectAll, 
+    this.allowSelectAll,
     this.confirmText,
     this.cancelText,
     this.selectedColor,
@@ -258,47 +258,52 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
               ? EdgeInsets.only(top: 12.0)
               : EdgeInsets.all(20),
       content: Container(
-        height: widget.height,
-        width: MediaQuery.of(context).size.width * 0.72,
         child: Column(
           children: [
             widget.listType == null ||
                     widget.listType == MultiSelectListType.LIST
-                ? ListView.builder(
-                    itemCount: _items.length,
-                    itemBuilder: (context, index) {
-                      return _buildListItem(_items[index]);
-                    },
+                ? Container(
+                    height: MediaQuery.of(context).size.height * .6,
+                    width: MediaQuery.of(context).size.height * .8,
+                    child: ListView.builder(
+                      itemCount: _items.length,
+                      itemBuilder: (context, index) {
+                        return _buildListItem(_items[index]);
+                      },
+                    ),
                   )
                 : SingleChildScrollView(
                     child: Wrap(
                       children: _items.map(_buildChipItem).toList(),
                     ),
                   ),
-            if (widget.allowSelectAll??false)
-            Expanded(
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                child: Row(
-                  children: [
-                    Expanded(child: Text("Seleccionar todos")),
-                    Checkbox(
-                        value: _selectAll,
-                        onChanged: (newValue) {
-                          setState(() {
-                            _selectAll = newValue!;
-                            if (_selectAll) {
-                              _selectedValues =
-                                  widget.items.map((e) => e.value).toList();
-                            } else {
-                              _selectedValues = [];
-                            }
-                          });
-                        })
-                  ],
+            if (widget.allowSelectAll ?? false)
+              Expanded(
+                child: Container(
+                  alignment: Alignment.bottomCenter,
+                  child: Row(
+                    children: [
+                      Expanded(child: Padding(
+                        padding: const EdgeInsets.only(left: 10.0),
+                        child: Text("Seleccionar todos"),
+                      )),
+                      Checkbox(
+                          value: _selectAll,
+                          onChanged: (newValue) {
+                            setState(() {
+                              _selectAll = newValue!;
+                              if (_selectAll) {
+                                _selectedValues =
+                                    widget.items.map((e) => e.value).toList();
+                              } else {
+                                _selectedValues = [];
+                              }
+                            });
+                          })
+                    ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
