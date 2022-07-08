@@ -6,9 +6,7 @@ import '../chip_display/multi_select_chip_display.dart';
 import 'mult_select_dialog.dart';
 import 'dart:async';
 
-
 class MultiSelectDialogTheme {
-
   /// Style the Container that makes up the field.
   final BoxDecoration? decoration;
 
@@ -42,7 +40,7 @@ class MultiSelectDialogTheme {
   /// Set the color of the check in the checkbox
   final Color? checkColor;
 
-  MultiSelectDialogTheme( {
+  MultiSelectDialogTheme({
     this.decoration,
     this.barrierColor,
     this.selectedColor,
@@ -55,13 +53,11 @@ class MultiSelectDialogTheme {
     this.selectedItemsTextStyle,
     this.checkColor,
   });
-
 }
 
 /// A customizable InkWell widget that opens the MultiSelectDialog
 // ignore: must_be_immutable
 class MultiSelectDialogField<V> extends FormField<List<V>> {
-  
   /// An enum that determines which type of list to render.
   final MultiSelectListType? listType;
 
@@ -119,6 +115,9 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   /// Replaces the default close search icon when searchable is true.
   final Icon? closeSearchIcon;
 
+  //Adds custom button only as action
+  final Widget? accepButton;
+
   final AutovalidateMode autovalidateMode;
   final FormFieldValidator<List<V>>? validator;
   final FormFieldSetter<List<V>>? onSaved;
@@ -128,6 +127,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
   MultiSelectDialogTheme? theme;
 
   MultiSelectDialogField({
+    this.accepButton,
     required this.items,
     required this.onConfirm,
     this.title,
@@ -148,10 +148,10 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
     this.onSaved,
     this.validator,
     this.initialValue,
-    this.values, 
+    this.values,
     this.autovalidateMode = AutovalidateMode.disabled,
     this.key,
-    this.theme, 
+    this.theme,
   }) : super(
             key: key,
             onSaved: onSaved,
@@ -171,7 +171,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 onConfirm: onConfirm,
                 onSelectionChanged: onSelectionChanged,
                 initialValue: initialValue,
-                values: values, 
+                values: values,
                 searchable: searchable,
                 allowSelectAll: allowSelectAll,
                 confirmText: confirmText,
@@ -214,6 +214,7 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
   final bool? allowSelectAll;
   final Text? confirmText;
   final Text? cancelText;
+  final Widget? accepButton;
   final Text? selectAllText;
   final Color? barrierColor;
   final Color? selectedColor;
@@ -261,7 +262,8 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
     this.searchHintStyle,
     this.selectedItemsTextStyle,
     this.checkColor,
-    this.values, 
+    this.values,
+    this.accepButton,
   });
 
   /// This constructor allows a FormFieldState to be passed in. Called by MultiSelectDialogField.
@@ -297,7 +299,9 @@ class _MultiSelectDialogFieldView<V> extends StatefulWidget {
         searchTextStyle = field.searchTextStyle,
         selectedItemsTextStyle = field.selectedItemsTextStyle,
         checkColor = field.checkColor,
+        accepButton = field.accepButton,
         state = state;
+        
 
   @override
   __MultiSelectDialogFieldViewState createState() =>
@@ -308,14 +312,13 @@ class __MultiSelectDialogFieldViewState<V>
     extends State<_MultiSelectDialogFieldView<V>> {
   List<V> _selectedItems = [];
   StreamSubscription? _itemsSubscription;
-  
+
   @override
   void initState() {
     super.initState();
     if (widget.initialValue != null) {
       _selectedItems.addAll(widget.initialValue!);
-    }
-    else if (widget.values != null) {
+    } else if (widget.values != null) {
       _itemsSubscription = widget.values!.listen((items) {
         setState(() {
           _selectedItems = items;
@@ -418,6 +421,7 @@ class __MultiSelectDialogFieldViewState<V>
           allowSelectAll: widget.allowSelectAll ?? false,
           confirmText: widget.confirmText,
           cancelText: widget.cancelText,
+          accepButton: widget.accepButton,
           onConfirm: (selected) {
             if (widget.state != null) {
               widget.state!.didChange(selected);
