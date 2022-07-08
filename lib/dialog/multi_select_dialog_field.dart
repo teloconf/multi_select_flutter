@@ -191,6 +191,7 @@ class MultiSelectDialogField<V> extends FormField<List<V>> {
                 searchHintStyle: theme?.searchHintStyle,
                 selectedItemsTextStyle: theme?.selectedItemsTextStyle,
                 checkColor: theme?.checkColor,
+                accepButton: accepButton,
               );
               return _MultiSelectDialogFieldView<V?>._withState(
                   field as _MultiSelectDialogFieldView<V?>, state);
