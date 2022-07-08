@@ -75,6 +75,9 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
   /// Set the color of the check in the checkbox
   final Color? checkColor;
 
+  //Adds custom button only as action
+  final Widget? accepButton;
+
   MultiSelectDialog({
     required this.items,
     required this.initialValue,
@@ -99,6 +102,7 @@ class MultiSelectDialog<V> extends StatefulWidget with MultiSelectActions<V> {
     this.searchTextStyle,
     this.selectedItemsTextStyle,
     this.checkColor,
+    this.accepButton,
   });
 
   @override
@@ -139,7 +143,7 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
               ? widget.selectedItemsTextStyle
               : widget.itemsTextStyle,
         ),
-        controlAffinity: ListTileControlAffinity.leading,
+        controlAffinity: ListTileControlAffinity.trailing,
         onChanged: (checked) {
           setState(() {
             _selectedValues = widget.onItemCheckedChange(
@@ -283,7 +287,8 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
                   alignment: Alignment.bottomCenter,
                   child: Row(
                     children: [
-                      Expanded(child: Padding(
+                      Expanded(
+                          child: Padding(
                         padding: const EdgeInsets.only(left: 10.0),
                         child: Text("Seleccionar todos"),
                       )),
@@ -308,36 +313,37 @@ class _MultiSelectDialogState<V> extends State<MultiSelectDialog<V>> {
         ),
       ),
       actions: <Widget>[
-        TextButton(
-          child: widget.cancelText ??
-              Text(
-                "CANCEL",
-                style: TextStyle(
-                  color: (widget.selectedColor != null &&
-                          widget.selectedColor != Colors.transparent)
-                      ? widget.selectedColor!.withOpacity(1)
-                      : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onCancelTap(context, widget.initialValue!);
-          },
-        ),
-        TextButton(
-          child: widget.confirmText ??
-              Text(
-                'OK',
-                style: TextStyle(
-                  color: (widget.selectedColor != null &&
-                          widget.selectedColor != Colors.transparent)
-                      ? widget.selectedColor!.withOpacity(1)
-                      : Theme.of(context).primaryColor,
-                ),
-              ),
-          onPressed: () {
-            widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
-          },
-        )
+        widget.accepButton!
+        // TextButton(
+        //   child: widget.cancelText ??
+        //       Text(
+        //         "CANCEL",
+        //         style: TextStyle(
+        //           color: (widget.selectedColor != null &&
+        //                   widget.selectedColor != Colors.transparent)
+        //               ? widget.selectedColor!.withOpacity(1)
+        //               : Theme.of(context).primaryColor,
+        //         ),
+        //       ),
+        //   onPressed: () {
+        //     widget.onCancelTap(context, widget.initialValue!);
+        //   },
+        // ),
+        // TextButton(
+        //   child: widget.confirmText ??
+        //       Text(
+        //         'OK',
+        //         style: TextStyle(
+        //           color: (widget.selectedColor != null &&
+        //                   widget.selectedColor != Colors.transparent)
+        //               ? widget.selectedColor!.withOpacity(1)
+        //               : Theme.of(context).primaryColor,
+        //         ),
+        //       ),
+        //   onPressed: () {
+        //     widget.onConfirmTap(context, _selectedValues, widget.onConfirm);
+        //   },
+        // )
       ],
     );
   }
